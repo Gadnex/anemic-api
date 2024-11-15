@@ -1,21 +1,4 @@
-package net.binarypaper.anemic_api.product;
-
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-import com.fasterxml.jackson.annotation.JsonView;
+package net.binarypaper.anemic_api.product.infrastructure.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,14 +6,25 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import net.binarypaper.anemic_api.product.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@AllArgsConstructor
 @RequestMapping(path = "products", produces = { MediaType.APPLICATION_JSON_VALUE })
 @CrossOrigin(origins = { "${application.cors.origins}" })
 @Tag(name = "Product API", description = "Manage products")
-public interface ProductAPI {
+public class ProductController {
+
+    private final ProductService productService;
 
     @PostMapping
-    @JsonView(Product.Views.Read.class)
     @Operation(summary = "Create new product", description = """
             <b>As a</b> scrum master<br>
             <b>I want to</b> create a new product<br>
@@ -40,10 +34,11 @@ public interface ProductAPI {
             @ApiResponse(responseCode = "200", description = "Product created"),
             @ApiResponse(responseCode = "400", description = "Invalid product details", content = @Content)
     })
-    Product createProduct(@RequestBody @JsonView(Product.Views.Create.class) @Valid Product product);
+    ProductReadResponse createProduct(@RequestBody @Valid ProductCreateRequest productCreateRequest) {
+        return productService.createProduct(productCreateRequest);
+    }
 
     @GetMapping
-    @JsonView(Product.Views.List.class)
     @Operation(summary = "Get all products", description = """
             <b>As a</b> scrum team member<br>
             <b>I want to</b> view a list of all products<br>
@@ -52,10 +47,11 @@ public interface ProductAPI {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "List of products returned")
     })
-    List<Product> getAllProducts();
+    List<ProductListResponse> getAllProducts() {
+        return productService.getAllProducts();
+    }
 
     @GetMapping("{product-id}")
-    @JsonView(Product.Views.Read.class)
     @Operation(summary = "Get product details", description = """
             <b>As a</b> scrum team member<br>
             <b>I want to</b> view the details of a specific product<br>
@@ -65,11 +61,12 @@ public interface ProductAPI {
             @ApiResponse(responseCode = "200", description = "Product returned"),
             @ApiResponse(responseCode = "404", description = "Product not found", content = @Content)
     })
-    Product getProduct(
-            @PathVariable(name = "product-id") UUID productId);
+    ProductReadResponse getProduct(
+            @PathVariable(name = "product-id") UUID productId) {
+        return productService.getProduct(new ProductId(productId));
+    }
 
     @PutMapping("{product-id}")
-    @JsonView(Product.Views.Read.class)
     @Operation(summary = "Update an existing product", description = """
             <b>As a</b> scrum master<br>
             <b>I want to</b> update an existing product<br>
@@ -80,9 +77,11 @@ public interface ProductAPI {
             @ApiResponse(responseCode = "400", description = "Invalid product details", content = @Content),
             @ApiResponse(responseCode = "404", description = "Product not found", content = @Content)
     })
-    Product updateProduct(
+    ProductReadResponse updateProduct(
             @PathVariable(name = "product-id") UUID productId,
-            @RequestBody @JsonView(Product.Views.Update.class) @Valid Product product);
+            @RequestBody @Valid ProductUpdateRequest productUpdateRequest) {
+        return productService.updateProduct(new ProductId(productId), productUpdateRequest);
+    }
 
     @DeleteMapping("{product-id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -96,6 +95,8 @@ public interface ProductAPI {
             @ApiResponse(responseCode = "404", description = "Product not found", content = @Content)
     })
     void deleteProduct(
-            @PathVariable(name = "product-id") UUID productId);
+            @PathVariable(name = "product-id") UUID productId) {
+        productService.deleteProduct(new ProductId(productId));
+    }
 
 }

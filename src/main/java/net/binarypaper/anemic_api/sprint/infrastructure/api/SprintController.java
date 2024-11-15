@@ -1,21 +1,4 @@
-package net.binarypaper.anemic_api.sprint;
-
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-import com.fasterxml.jackson.annotation.JsonView;
+package net.binarypaper.anemic_api.sprint.infrastructure.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,14 +6,27 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import net.binarypaper.anemic_api.product.ProductNotFoundException;
+import net.binarypaper.anemic_api.sprint.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-@RequestMapping(path = "sprint", produces = { MediaType.APPLICATION_JSON_VALUE })
-@CrossOrigin(origins = { "${application.cors.origins}" })
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping(path = "sprint", produces = {MediaType.APPLICATION_JSON_VALUE})
+@CrossOrigin(origins = {"${application.cors.origins}"})
 @Tag(name = "Sprint API", description = "Manage sprints")
-public interface SprintAPI {
+@AllArgsConstructor
+public class SprintController {
+
+    private final SprintService sprintService;
 
     @PostMapping
-    @JsonView(Sprint.Views.Read.class)
     @Operation(summary = "Create new sprint", description = """
             <b>As a</b> scrum master<br>
             <b>I want to</b> create a new sprint<br>
@@ -40,11 +36,15 @@ public interface SprintAPI {
             @ApiResponse(responseCode = "200", description = "Sprint created"),
             @ApiResponse(responseCode = "400", description = "Invalid sprint details", content = @Content)
     })
-    Sprint createSprint(
-            @RequestBody @JsonView(Sprint.Views.Create.class) @Valid Sprint sprint);
+    public SprintReadResponse createSprint(@RequestBody @Valid SprintCreateRequest sprintCreateRequest) {
+        try {
+            return sprintService.createSprint(sprintCreateRequest);
+        } catch (ProductNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid product-id");
+        }
+    }
 
     @GetMapping
-    @JsonView(Sprint.Views.List.class)
     @Operation(summary = "Get all sprints", description = """
             <b>As a</b> scrum team member<br>
             <b>I want to</b> view a list of all sprints<br>
@@ -53,10 +53,11 @@ public interface SprintAPI {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "List of sprints returned")
     })
-    List<Sprint> getAllSprints();
+    public List<SprintListResponse> getAllSprints() {
+        return sprintService.getAllSprints();
+    }
 
     @GetMapping("{sprint-id}")
-    @JsonView(Sprint.Views.Read.class)
     @Operation(summary = "Get sprint details", description = """
             <b>As a</b> scrum team member<br>
             <b>I want to</b> view the details of a specific sprint<br>
@@ -66,22 +67,25 @@ public interface SprintAPI {
             @ApiResponse(responseCode = "200", description = "Sprint returned"),
             @ApiResponse(responseCode = "404", description = "Sprint not found", content = @Content)
     })
-    Sprint getSprint(@PathVariable(name = "sprint-id") UUID sprintId);
+    public SprintReadResponse getSprint(@PathVariable(name = "sprint-id") UUID sprintId) {
+        return sprintService.getSprint(new SprintId(sprintId));
+    }
 
-    @PutMapping("{sprint-id}")
-    @JsonView(Sprint.Views.Read.class)
-    @Operation(summary = "Update an existing sprint", description = """
+    @PutMapping("{sprint-id}/plan")
+    @Operation(summary = "Plan a existing sprint", description = """
             <b>As a</b> scrum master<br>
-            <b>I want to</b> update an existing sprint<br>
-            <b>so that</b> my team can work on the sprint.
+            <b>I want to</b> plan the start and end date of a sprint<br>
+            <b>so that</b> my team can work on the sprint during this period.
             """)
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Sprint updated"),
-            @ApiResponse(responseCode = "400", description = "Invalid sprint details", content = @Content),
+            @ApiResponse(responseCode = "200", description = "Sprint planned"),
+            @ApiResponse(responseCode = "400", description = "Invalid sprint planning dates", content = @Content),
             @ApiResponse(responseCode = "404", description = "Sprint not found", content = @Content)
     })
-    Sprint updateSprint(@PathVariable(name = "sprint-id") UUID sprintId,
-            @RequestBody @JsonView(Sprint.Views.Update.class) @Valid Sprint sprint);
+    public SprintReadResponse planSprint(@PathVariable(name = "sprint-id") UUID sprintId,
+                                         @RequestBody @Valid PlanSprintRequest planSprintRequest) {
+        return sprintService.planSprint(new SprintId(sprintId), planSprintRequest);
+    }
 
     @DeleteMapping("{sprint-id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -94,5 +98,7 @@ public interface SprintAPI {
             @ApiResponse(responseCode = "204", description = "Sprint deleted"),
             @ApiResponse(responseCode = "404", description = "Sprint not found", content = @Content)
     })
-    void deleteSprint(@PathVariable(name = "sprint-id") UUID sprintId);
+    void deleteSprint(@PathVariable(name = "sprint-id") UUID sprintId) {
+        sprintService.deleteSprint(new SprintId(sprintId));
+    }
 }

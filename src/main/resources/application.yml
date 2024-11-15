@@ -6,17 +6,15 @@ spring:
         # DB_CLOSE_DELAY prevents database from being destroyed after disconnect of schema creation
         url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
     jpa:
-        # Required for src/main/resources/data.sql to run after Hibernate schema creation
-        defer-datasource-initialization: true
         show-sql: true
+        hibernate:
+            ddl-auto: none
     h2:
         console:
             enabled: true
             settings:
                 web-allow-others: true
     jackson:
-        # Global setting to not return null objects in JSON responses
-        # default-property-inclusion: NON_NULL
         property-naming-strategy: KEBAB_CASE
 
 server:

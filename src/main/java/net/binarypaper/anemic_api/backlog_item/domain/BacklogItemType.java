@@ -1,4 +1,4 @@
-package net.binarypaper.anemic_api.backlog_item;
+package net.binarypaper.anemic_api.backlog_item.domain;
 
 public enum BacklogItemType {
     USER_STORY,
