@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import net.binarypaper.anemic_api.product.domain.Product;
 import net.binarypaper.anemic_api.product.domain.ProductRepository;
+import org.hibernate.StaleObjectStateException;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @Service
-@Retryable(noRetryFor = {IllegalArgumentException.class, IllegalStateException.class, ResponseStatusException.class})
+@Retryable(retryFor = {StaleObjectStateException.class})
 @AllArgsConstructor
 public class ProductService {
 

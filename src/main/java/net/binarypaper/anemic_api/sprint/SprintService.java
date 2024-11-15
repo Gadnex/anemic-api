@@ -6,6 +6,7 @@ import net.binarypaper.anemic_api.product.ProductId;
 import net.binarypaper.anemic_api.product.ProductService;
 import net.binarypaper.anemic_api.sprint.domain.Sprint;
 import net.binarypaper.anemic_api.sprint.domain.SprintRepository;
+import org.hibernate.StaleObjectStateException;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @Service
-@Retryable(noRetryFor = {IllegalArgumentException.class, IllegalStateException.class, ResponseStatusException.class})
+@Retryable(retryFor = {StaleObjectStateException.class})
 @AllArgsConstructor
 public class SprintService {
 
@@ -24,11 +25,7 @@ public class SprintService {
 
     @Transactional
     public SprintReadResponse createSprint(@Valid SprintCreateRequest sprintCreateRequest) {
-        try {
-            productService.getProduct(new ProductId(sprintCreateRequest.productId()));
-        } catch (IllegalArgumentException e) {
-            throw new IllegalStateException(e.getMessage());
-        }
+        productService.getProduct(new ProductId(sprintCreateRequest.productId()));
         Sprint sprint = new Sprint(sprintCreateRequest);
         sprintRepository.save(sprint);
         return sprint.toSprintReadResponse();

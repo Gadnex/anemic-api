@@ -8,6 +8,7 @@ import net.binarypaper.anemic_api.product.ProductId;
 import net.binarypaper.anemic_api.product.ProductService;
 import net.binarypaper.anemic_api.sprint.SprintId;
 import net.binarypaper.anemic_api.sprint.SprintService;
+import org.hibernate.StaleObjectStateException;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @Service
-@Retryable(noRetryFor = {IllegalArgumentException.class, IllegalStateException.class, ResponseStatusException.class})
+@Retryable(retryFor = {StaleObjectStateException.class})
 @AllArgsConstructor
 public class BacklogItemService {
 
@@ -29,11 +30,7 @@ public class BacklogItemService {
 
     @Transactional
     public BacklogItemReadResponse createBacklogItem(@Valid BacklogItemCreateRequest backlogItemCreateRequest) {
-        try {
-            productService.getProduct(new ProductId(backlogItemCreateRequest.productId()));
-        } catch (IllegalArgumentException ex) {
-            throw new IllegalStateException(ex.getMessage());
-        }
+        productService.getProduct(new ProductId(backlogItemCreateRequest.productId()));
         BacklogItem backlogItem = new BacklogItem(backlogItemCreateRequest);
         backlogItemRepository.save(backlogItem);
         return backlogItem.toBacklogItemReadResponse();
@@ -56,12 +53,8 @@ public class BacklogItemService {
 
     @Transactional
     public BacklogItemReadResponse commitToSprint(@Valid BacklogItemId backlogItemId, @Valid SprintId sprintId) {
+        sprintService.getSprint(sprintId);
         BacklogItem backlogItem = getBacklogItemById(backlogItemId);
-        try {
-            sprintService.getSprint(sprintId);
-        } catch (IllegalArgumentException ex) {
-            throw new IllegalStateException(ex.getMessage());
-        }
         backlogItem.commitToSprint(sprintId);
         backlogItemRepository.save(backlogItem);
         return backlogItem.toBacklogItemReadResponse();
