@@ -11,9 +11,9 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import net.binarypaper.anemic_api.sprint.CreateSprintRequest;
 import net.binarypaper.anemic_api.sprint.PlanSprintRequest;
-import net.binarypaper.anemic_api.sprint.SprintCreateRequest;
-import net.binarypaper.anemic_api.sprint.SprintReadResponse;
+import net.binarypaper.anemic_api.sprint.ReadSprintResponse;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,13 +39,13 @@ public class Sprint {
 
   @Future private LocalDate endDate;
 
-  public Sprint(SprintCreateRequest sprintCreateRequest) {
-    productId = sprintCreateRequest.productId();
-    name = sprintCreateRequest.name();
+  public Sprint(CreateSprintRequest createSprintRequest) {
+    productId = createSprintRequest.productId();
+    name = createSprintRequest.name();
   }
 
-  public SprintReadResponse toSprintReadResponse() {
-    return new SprintReadResponse(sprintId, productId, name, startDate, endDate);
+  public ReadSprintResponse toSprintReadResponse() {
+    return new ReadSprintResponse(sprintId, productId, name, startDate, endDate);
   }
 
   public void planSprint(PlanSprintRequest planSprintRequest) {

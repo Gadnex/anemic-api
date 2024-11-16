@@ -10,9 +10,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.util.UUID;
 import lombok.*;
-import net.binarypaper.anemic_api.product.ProductCreateRequest;
-import net.binarypaper.anemic_api.product.ProductReadResponse;
-import net.binarypaper.anemic_api.product.ProductUpdateRequest;
+import net.binarypaper.anemic_api.product.CreateProductRequest;
+import net.binarypaper.anemic_api.product.ReadProductResponse;
+import net.binarypaper.anemic_api.product.UpdateProductRequest;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -32,17 +32,17 @@ public class Product {
 
   @Lob private String description;
 
-  public Product(ProductCreateRequest productCreateRequest) {
-    name = productCreateRequest.name();
-    description = productCreateRequest.description();
+  public Product(CreateProductRequest createProductRequest) {
+    name = createProductRequest.name();
+    description = createProductRequest.description();
   }
 
-  public ProductReadResponse toProductReadResponse() {
-    return new ProductReadResponse(productId, name, description);
+  public ReadProductResponse toProductReadResponse() {
+    return new ReadProductResponse(productId, name, description);
   }
 
-  public void updateProduct(ProductUpdateRequest productUpdateRequest) {
-    name = productUpdateRequest.name();
-    description = productUpdateRequest.description();
+  public void updateProduct(UpdateProductRequest updateProductRequest) {
+    name = updateProductRequest.name();
+    description = updateProductRequest.description();
   }
 }
