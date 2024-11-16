@@ -14,17 +14,24 @@ import org.springframework.retry.annotation.EnableRetry;
 
 @SpringBootApplication
 @PropertySource("classpath:META-INF/build-info.properties")
-@OpenAPIDefinition(info = @Info(title = "scrum-management-api", description = "${build.description}", version = "${build.version}", contact = @Contact(name = "${build.developer.name}", email = "${build.developer.email}"), license = @License(name = "${build.license.name}", url = "${build.license.url}")))
+@OpenAPIDefinition(
+    info =
+        @Info(
+            title = "scrum-management-api",
+            description = "${build.description}",
+            version = "${build.version}",
+            contact =
+                @Contact(name = "${build.developer.name}", email = "${build.developer.email}"),
+            license = @License(name = "${build.license.name}", url = "${build.license.url}")))
 @EnableRetry
 public class Application {
 
-	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+  }
 
-	@Bean
-	public ModelResolver modelResolver(ObjectMapper objectMapper) {
-		return new ModelResolver(objectMapper);
-	}
-
+  @Bean
+  public ModelResolver modelResolver(ObjectMapper objectMapper) {
+    return new ModelResolver(objectMapper);
+  }
 }

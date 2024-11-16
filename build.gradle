@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.5'
 	id 'io.spring.dependency-management' version '1.1.6'
+	id 'com.diffplug.spotless' version '7.0.0.BETA4'
 }
 
 group = 'net.binarypaper'
@@ -65,5 +66,11 @@ springBoot {
 				"license.url" : "https://www.apache.org/licenses/LICENSE-2.0"
 			]
 		}
+	}
+}
+
+spotless {
+	java {
+		googleJavaFormat()
 	}
 }
