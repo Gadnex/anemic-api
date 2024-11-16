@@ -2,9 +2,9 @@ package net.binarypaper.anemic_api.backlog;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
-import net.binarypaper.anemic_api.backlog.domain.BacklogItem;
-import net.binarypaper.anemic_api.backlog.domain.BacklogItemRepository;
+import net.binarypaper.anemic_api.backlog.domain.*;
 import org.hibernate.StaleObjectStateException;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -18,31 +18,31 @@ public class BacklogApplication {
   private final BacklogItemRepository backlogItemRepository;
 
   @Transactional
-  public BacklogItemReadResponse createBacklogItem(
-      @Valid BacklogItemCreateRequest backlogItemCreateRequest) {
-    BacklogItem backlogItem = new BacklogItem(backlogItemCreateRequest);
+  public ReadBacklogItemResponse createBacklogItem(
+      @Valid CreateBacklogItemRequest createBacklogItemRequest) {
+    BacklogItem backlogItem = new BacklogItem(createBacklogItemRequest);
     backlogItemRepository.save(backlogItem);
     return backlogItem.toBacklogItemReadResponse();
   }
 
-  public List<BacklogItemListResponse> getAllBacklogItems() {
-    return backlogItemRepository.findBy(BacklogItemListResponse.class);
+  public List<ListBacklogItemResponse> getAllBacklogItems() {
+    return backlogItemRepository.findBy(ListBacklogItemResponse.class);
   }
 
-  public BacklogItemReadResponse getBacklogItem(@Valid BacklogItemId backlogItemId) {
+  public ReadBacklogItemResponse getBacklogItem(UUID backlogItemId) {
     BacklogItem backlogItem = getBacklogItemById(backlogItemId);
     return backlogItem.toBacklogItemReadResponse();
   }
 
   @Transactional
-  public void deleteBacklogItem(@Valid BacklogItemId backlogItemId) {
+  public void deleteBacklogItem(UUID backlogItemId) {
     BacklogItem backlogItem = getBacklogItemById(backlogItemId);
     backlogItemRepository.delete(backlogItem);
   }
 
   @Transactional
-  public BacklogItemReadResponse commitToSprint(
-      @Valid BacklogItemId backlogItemId, @Valid CommitSprintRequest commitSprintRequest) {
+  public ReadBacklogItemResponse commitToSprint(
+      UUID backlogItemId, @Valid CommitSprintRequest commitSprintRequest) {
     BacklogItem backlogItem = getBacklogItemById(backlogItemId);
     backlogItem.commitToSprint(commitSprintRequest);
     backlogItemRepository.save(backlogItem);
@@ -50,9 +50,8 @@ public class BacklogApplication {
   }
 
   @Transactional
-  public BacklogItemReadResponse changeProgressStatus(
-      @Valid BacklogItemId backlogItemId,
-      @Valid ProgressStatusChangeRequest progressStatusChangeRequest) {
+  public ReadBacklogItemResponse changeProgressStatus(
+      UUID backlogItemId, @Valid ProgressStatusChangeRequest progressStatusChangeRequest) {
     BacklogItem backlogItem = getBacklogItemById(backlogItemId);
     backlogItem.changeProgressStatus(progressStatusChangeRequest);
     backlogItemRepository.save(backlogItem);
@@ -60,17 +59,17 @@ public class BacklogApplication {
   }
 
   @Transactional
-  public BacklogItemReadResponse addComment(
-      @Valid BacklogItemId backlogItemId, @Valid AddCommentRequest addCommentRequest) {
+  public ReadBacklogItemResponse addComment(
+      UUID backlogItemId, @Valid AddCommentRequest addCommentRequest) {
     BacklogItem backlogItem = getBacklogItemById(backlogItemId);
     backlogItem.addComment(addCommentRequest);
     backlogItemRepository.save(backlogItem);
     return backlogItem.toBacklogItemReadResponse();
   }
 
-  private BacklogItem getBacklogItemById(@Valid BacklogItemId backlogItemId) {
+  private BacklogItem getBacklogItemById(UUID backlogItemId) {
     return backlogItemRepository
-        .findById(backlogItemId.backlogItemId())
+        .findById(backlogItemId)
         .orElseThrow(BacklogItemNotFoundException::new);
   }
 }

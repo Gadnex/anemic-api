@@ -1,11 +1,9 @@
-package net.binarypaper.anemic_api.backlog;
+package net.binarypaper.anemic_api.backlog.domain;
 
 import java.util.List;
 import java.util.UUID;
-import net.binarypaper.anemic_api.backlog.domain.BacklogItemStatus;
-import net.binarypaper.anemic_api.backlog.domain.BacklogItemType;
 
-public record BacklogItemReadResponse(
+public record ReadBacklogItemResponse(
     UUID backlogItemId,
     UUID productId,
     UUID sprintId,

@@ -1,6 +1,5 @@
-package net.binarypaper.anemic_api.backlog;
+package net.binarypaper.anemic_api.backlog.domain;
 
 import jakarta.validation.constraints.NotNull;
-import net.binarypaper.anemic_api.backlog.domain.BacklogItemStatus;
 
 public record ProgressStatusChangeRequest(@NotNull BacklogItemStatus newStatus) {}

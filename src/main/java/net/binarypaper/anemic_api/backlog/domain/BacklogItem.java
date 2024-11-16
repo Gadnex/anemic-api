@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.*;
-import net.binarypaper.anemic_api.backlog.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,8 +32,8 @@ public class BacklogItem {
 
   @Lob private String story;
 
-  @Min(value = 1, message = "A user story may not have less than {min} story points")
-  @Max(value = 21, message = "A user story may not have more than {max} story points")
+  @Min(value = 1)
+  @Max(value = 21)
   private Short storyPoints;
 
   private BacklogItemType type;
@@ -46,10 +45,10 @@ public class BacklogItem {
   @Column(name = "comment")
   private List<@NotNull @Size(min = 1, max = 1024) String> comments = new ArrayList<>();
 
-  public BacklogItem(BacklogItemCreateRequest backlogItemCreateRequest) {
-    productId = backlogItemCreateRequest.productId();
-    name = backlogItemCreateRequest.name();
-    summary = backlogItemCreateRequest.summary();
+  public BacklogItem(CreateBacklogItemRequest createBacklogItemRequest) {
+    productId = createBacklogItemRequest.productId();
+    name = createBacklogItemRequest.name();
+    summary = createBacklogItemRequest.summary();
     status = BacklogItemStatus.BACKLOG;
   }
 
@@ -68,8 +67,8 @@ public class BacklogItem {
     status = progressStatusChangeRequest.newStatus();
   }
 
-  public BacklogItemReadResponse toBacklogItemReadResponse() {
-    return new BacklogItemReadResponse(
+  public ReadBacklogItemResponse toBacklogItemReadResponse() {
+    return new ReadBacklogItemResponse(
         backlogItemId,
         productId,
         sprintId,

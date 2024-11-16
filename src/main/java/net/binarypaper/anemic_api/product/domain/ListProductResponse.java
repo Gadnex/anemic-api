@@ -1,4 +1,4 @@
-package net.binarypaper.anemic_api.product;
+package net.binarypaper.anemic_api.product.domain;
 
 import java.util.UUID;
 

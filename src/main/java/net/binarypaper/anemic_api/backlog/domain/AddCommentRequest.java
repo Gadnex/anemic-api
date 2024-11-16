@@ -1,4 +1,4 @@
-package net.binarypaper.anemic_api.backlog;
+package net.binarypaper.anemic_api.backlog.domain;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

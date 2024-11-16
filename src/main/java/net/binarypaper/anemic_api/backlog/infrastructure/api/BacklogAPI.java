@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import net.binarypaper.anemic_api.backlog.*;
+import net.binarypaper.anemic_api.backlog.domain.*;
 import net.binarypaper.anemic_api.product.ProductNotFoundException;
 import net.binarypaper.anemic_api.sprint.SprintNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -44,10 +45,10 @@ public class BacklogAPI {
         description = "Invalid backlog item details",
         content = @Content)
   })
-  public BacklogItemReadResponse createBacklogItem(
-      @RequestBody @Valid BacklogItemCreateRequest backlogItemCreateRequest) {
+  public ReadBacklogItemResponse createBacklogItem(
+      @RequestBody @Valid CreateBacklogItemRequest createBacklogItemRequest) {
     try {
-      return backlogApplication.createBacklogItem(backlogItemCreateRequest);
+      return backlogApplication.createBacklogItem(createBacklogItemRequest);
     } catch (ProductNotFoundException ex) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid product-id");
     }
@@ -65,7 +66,7 @@ public class BacklogAPI {
   @ApiResponses({
     @ApiResponse(responseCode = "200", description = "List of backlog items returned")
   })
-  public List<BacklogItemListResponse> getAllBacklogItems() {
+  public List<ListBacklogItemResponse> getAllBacklogItems() {
     return backlogApplication.getAllBacklogItems();
   }
 
@@ -82,9 +83,9 @@ public class BacklogAPI {
     @ApiResponse(responseCode = "200", description = "Backlog item returned"),
     @ApiResponse(responseCode = "404", description = "Backlog item not found", content = @Content)
   })
-  public BacklogItemReadResponse getBacklogItem(
+  public ReadBacklogItemResponse getBacklogItem(
       @PathVariable(name = "backlog-item-id") UUID backlogItemId) {
-    return backlogApplication.getBacklogItem(new BacklogItemId(backlogItemId));
+    return backlogApplication.getBacklogItem(backlogItemId);
   }
 
   @DeleteMapping("{backlog-item-id}")
@@ -102,7 +103,7 @@ public class BacklogAPI {
     @ApiResponse(responseCode = "404", description = "Backlog item not found", content = @Content)
   })
   public void deleteBacklogItem(@PathVariable(name = "backlog-item-id") UUID backlogItemId) {
-    backlogApplication.deleteBacklogItem(new BacklogItemId(backlogItemId));
+    backlogApplication.deleteBacklogItem(backlogItemId);
   }
 
   @PutMapping("{backlog-item-id}/sprint")
@@ -122,12 +123,11 @@ public class BacklogAPI {
         content = @Content),
     @ApiResponse(responseCode = "404", description = "Backlog item not found", content = @Content)
   })
-  public BacklogItemReadResponse commitToSprint(
+  public ReadBacklogItemResponse commitToSprint(
       @PathVariable(name = "backlog-item-id") UUID backlogItemId,
       @RequestBody @Valid CommitSprintRequest commitSprintRequest) {
     try {
-      return backlogApplication.commitToSprint(
-          new BacklogItemId(backlogItemId), commitSprintRequest);
+      return backlogApplication.commitToSprint(backlogItemId, commitSprintRequest);
     } catch (SprintNotFoundException ex) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid sprint-id");
     }
@@ -150,11 +150,10 @@ public class BacklogAPI {
         content = @Content),
     @ApiResponse(responseCode = "404", description = "Backlog item not found", content = @Content)
   })
-  public BacklogItemReadResponse changeProgressStatus(
+  public ReadBacklogItemResponse changeProgressStatus(
       @PathVariable(name = "backlog-item-id") UUID backlogItemId,
       @RequestBody @Valid ProgressStatusChangeRequest progressStatusChangeRequest) {
-    return backlogApplication.changeProgressStatus(
-        new BacklogItemId(backlogItemId), progressStatusChangeRequest);
+    return backlogApplication.changeProgressStatus(backlogItemId, progressStatusChangeRequest);
   }
 
   @PutMapping("{backlog-item-id}/comments")
@@ -174,9 +173,9 @@ public class BacklogAPI {
         content = @Content),
     @ApiResponse(responseCode = "404", description = "Backlog item not found", content = @Content)
   })
-  public BacklogItemReadResponse addComment(
+  public ReadBacklogItemResponse addComment(
       @PathVariable(name = "backlog-item-id") UUID backlogItemId,
       @RequestBody @Valid AddCommentRequest addCommentRequest) {
-    return backlogApplication.addComment(new BacklogItemId(backlogItemId), addCommentRequest);
+    return backlogApplication.addComment(backlogItemId, addCommentRequest);
   }
 }

@@ -10,9 +10,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.util.UUID;
 import lombok.*;
-import net.binarypaper.anemic_api.product.CreateProductRequest;
-import net.binarypaper.anemic_api.product.ReadProductResponse;
-import net.binarypaper.anemic_api.product.UpdateProductRequest;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
