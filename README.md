@@ -70,6 +70,7 @@ There are also some financial and managerial issues caused by anemic APIs:
 - It also becomes more difficult to complete the development of such endpoints in a single Agile iteration or 
   SCRUM sprint.
 - These endpoints often need to be revisited if a new screen is discovered that needs to call the endpoint.
+- It makes it more difficult to make user stories that are true vertical slices through your architecture.
 - In general, it makes it more difficult for teams to estimate the total effort required to complete a product/project
   and more difficult to measure a team's velocity. Without this important data we cannot calculate when will the
   project/product be done and how much will it cost.
