@@ -1,4 +1,4 @@
-package net.binarypaper.anemic_api.sprint;
+package net.binarypaper.anemic_api.sprint.domain;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

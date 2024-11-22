@@ -1,6 +1,7 @@
 package net.binarypaper.anemic_api.sprint.infrastructure.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -9,12 +10,17 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
-import net.binarypaper.anemic_api.product.ProductNotFoundException;
-import net.binarypaper.anemic_api.sprint.*;
+import net.binarypaper.anemic_api.sprint.SprintApplication;
+import net.binarypaper.anemic_api.sprint.domain.CreateSprintRequest;
+import net.binarypaper.anemic_api.sprint.domain.ListSprintResponse;
+import net.binarypaper.anemic_api.sprint.domain.PlanSprintRequest;
+import net.binarypaper.anemic_api.sprint.domain.ReadSprintResponse;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping(
@@ -28,6 +34,8 @@ public class SprintAPI {
   private final SprintApplication sprintApplication;
 
   @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  @CrossOrigin(exposedHeaders = {HttpHeaders.LOCATION})
   @Operation(
       summary = "Create new sprint",
       description =
@@ -37,16 +45,26 @@ public class SprintAPI {
             <b>so that</b> my team can work on the sprint.
             """)
   @ApiResponses({
-    @ApiResponse(responseCode = "200", description = "Sprint created"),
+    @ApiResponse(
+        responseCode = "201",
+        description = "Sprint created",
+        headers = {
+          @Header(
+              name = HttpHeaders.LOCATION,
+              description = "The URL of the new sprint",
+              required = true)
+        }),
     @ApiResponse(responseCode = "400", description = "Invalid sprint details", content = @Content)
   })
-  public ReadSprintResponse createSprint(
+  public ResponseEntity<ReadSprintResponse> createSprint(
       @RequestBody @Valid CreateSprintRequest createSprintRequest) {
-    try {
-      return sprintApplication.createSprint(createSprintRequest);
-    } catch (ProductNotFoundException ex) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid product-id");
-    }
+    ReadSprintResponse readSprintResponse = sprintApplication.createSprint(createSprintRequest);
+    return ResponseEntity.created(
+            ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(readSprintResponse.sprintId())
+                .toUri())
+        .body(readSprintResponse);
   }
 
   @GetMapping

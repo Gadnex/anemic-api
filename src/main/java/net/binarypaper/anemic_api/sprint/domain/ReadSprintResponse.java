@@ -1,4 +1,4 @@
-package net.binarypaper.anemic_api.sprint;
+package net.binarypaper.anemic_api.sprint.domain;
 
 import java.time.LocalDate;
 import java.util.UUID;

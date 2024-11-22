@@ -1,6 +1,7 @@
 package net.binarypaper.anemic_api.product.infrastructure.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -14,9 +15,12 @@ import net.binarypaper.anemic_api.product.domain.CreateProductRequest;
 import net.binarypaper.anemic_api.product.domain.ListProductResponse;
 import net.binarypaper.anemic_api.product.domain.ReadProductResponse;
 import net.binarypaper.anemic_api.product.domain.UpdateProductRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @AllArgsConstructor
@@ -30,6 +34,8 @@ public class ProductAPI {
   private final ProductApplication productApplication;
 
   @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  @CrossOrigin(exposedHeaders = {HttpHeaders.LOCATION})
   @Operation(
       summary = "Create new product",
       description =
@@ -39,11 +45,26 @@ public class ProductAPI {
             <b>so that</b> my team can work on the product.
             """)
   @ApiResponses({
-    @ApiResponse(responseCode = "200", description = "Product created"),
+    @ApiResponse(
+        responseCode = "201",
+        description = "Product created",
+        headers = {
+          @Header(
+              name = HttpHeaders.LOCATION,
+              description = "The URL of the new product",
+              required = true)
+        }),
     @ApiResponse(responseCode = "400", description = "Invalid product details", content = @Content)
   })
-  ReadProductResponse createProduct(@RequestBody @Valid CreateProductRequest createProductRequest) {
-    return productApplication.createProduct(createProductRequest);
+  ResponseEntity<ReadProductResponse> createProduct(
+      @RequestBody @Valid CreateProductRequest createProductRequest) {
+    ReadProductResponse productResponse = productApplication.createProduct(createProductRequest);
+    return ResponseEntity.created(
+            ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(productResponse.productId())
+                .toUri())
+        .body(productResponse);
   }
 
   @GetMapping

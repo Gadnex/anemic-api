@@ -1,6 +1,5 @@
 package net.binarypaper.anemic_api.exception;
 
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.ResponseStatusException;
 
 @ControllerAdvice
-@Slf4j
 public class RestControllerExceptionHandler {
 
   @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})

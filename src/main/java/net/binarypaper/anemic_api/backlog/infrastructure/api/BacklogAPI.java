@@ -1,6 +1,7 @@
 package net.binarypaper.anemic_api.backlog.infrastructure.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -9,14 +10,14 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
-import net.binarypaper.anemic_api.backlog.*;
+import net.binarypaper.anemic_api.backlog.BacklogApplication;
 import net.binarypaper.anemic_api.backlog.domain.*;
-import net.binarypaper.anemic_api.product.ProductNotFoundException;
-import net.binarypaper.anemic_api.sprint.SprintNotFoundException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @AllArgsConstructor
@@ -30,6 +31,8 @@ public class BacklogAPI {
   private final BacklogApplication backlogApplication;
 
   @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  @CrossOrigin(exposedHeaders = {HttpHeaders.LOCATION})
   @Operation(
       summary = "Create new backlog item",
       description =
@@ -39,19 +42,30 @@ public class BacklogAPI {
             <b>so that</b> my team can work on the backlog item.
             """)
   @ApiResponses({
-    @ApiResponse(responseCode = "200", description = "Backlog item created"),
+    @ApiResponse(
+        responseCode = "201",
+        description = "Backlog item created",
+        headers = {
+          @Header(
+              name = HttpHeaders.LOCATION,
+              description = "The URL of the new backlog item",
+              required = true)
+        }),
     @ApiResponse(
         responseCode = "400",
         description = "Invalid backlog item details",
         content = @Content)
   })
-  public ReadBacklogItemResponse createBacklogItem(
+  public ResponseEntity<ReadBacklogItemResponse> createBacklogItem(
       @RequestBody @Valid CreateBacklogItemRequest createBacklogItemRequest) {
-    try {
-      return backlogApplication.createBacklogItem(createBacklogItemRequest);
-    } catch (ProductNotFoundException ex) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid product-id");
-    }
+    ReadBacklogItemResponse readBacklogItemResponse =
+        backlogApplication.createBacklogItem(createBacklogItemRequest);
+    return ResponseEntity.created(
+            ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(readBacklogItemResponse.backlogItemId())
+                .toUri())
+        .body(readBacklogItemResponse);
   }
 
   @GetMapping
@@ -126,11 +140,7 @@ public class BacklogAPI {
   public ReadBacklogItemResponse commitToSprint(
       @PathVariable(name = "backlog-item-id") UUID backlogItemId,
       @RequestBody @Valid CommitSprintRequest commitSprintRequest) {
-    try {
-      return backlogApplication.commitToSprint(backlogItemId, commitSprintRequest);
-    } catch (SprintNotFoundException ex) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid sprint-id");
-    }
+    return backlogApplication.commitToSprint(backlogItemId, commitSprintRequest);
   }
 
   @PutMapping("{backlog-item-id}/progress")
