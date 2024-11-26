@@ -40,7 +40,8 @@ springdoc:
     use-management-port: true
 
 application:
-    credit-card-fee-percentage: 1
+    api:
+        endpoint: http://localhost:${server.port}
     cors:
         origins: http://localhost:${management.server.port}
 
