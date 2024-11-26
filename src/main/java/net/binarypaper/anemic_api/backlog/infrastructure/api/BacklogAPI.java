@@ -1,5 +1,7 @@
 package net.binarypaper.anemic_api.backlog.infrastructure.api;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -9,22 +11,24 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import net.binarypaper.anemic_api.backlog.BacklogApplication;
 import net.binarypaper.anemic_api.backlog.domain.*;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(
-    path = "backlog-items",
-    produces = {MediaType.APPLICATION_JSON_VALUE})
-@CrossOrigin(origins = {"${application.cors.origins}"})
+@RequestMapping(path = "backlog-items")
+@CrossOrigin(
+    origins = {"${application.cors.origins}"},
+    exposedHeaders = HttpHeaders.LOCATION)
 @Tag(name = "Backlog API", description = "Manage the product backlog")
 public class BacklogAPI {
 
@@ -56,7 +60,7 @@ public class BacklogAPI {
         description = "Invalid backlog item details",
         content = @Content)
   })
-  public ResponseEntity<ReadBacklogItemResponse> createBacklogItem(
+  public ResponseEntity<EntityModel<ReadBacklogItemResponse>> createBacklogItem(
       @RequestBody @Valid CreateBacklogItemRequest createBacklogItemRequest) {
     ReadBacklogItemResponse readBacklogItemResponse =
         backlogApplication.createBacklogItem(createBacklogItemRequest);
@@ -65,7 +69,7 @@ public class BacklogAPI {
                 .path("/{id}")
                 .buildAndExpand(readBacklogItemResponse.backlogItemId())
                 .toUri())
-        .body(readBacklogItemResponse);
+        .body(EntityModel.of(readBacklogItemResponse));
   }
 
   @GetMapping
@@ -80,8 +84,17 @@ public class BacklogAPI {
   @ApiResponses({
     @ApiResponse(responseCode = "200", description = "List of backlog items returned")
   })
-  public List<ListBacklogItemResponse> getAllBacklogItems() {
-    return backlogApplication.getAllBacklogItems();
+  public CollectionModel<EntityModel<ListBacklogItemResponse>> getAllBacklogItems() {
+    List<ListBacklogItemResponse> allBacklogItems = backlogApplication.getAllBacklogItems();
+    return CollectionModel.of(
+            allBacklogItems.stream().map(EntityModel::of).collect(Collectors.toList()))
+        .add(
+            linkTo(methodOn(BacklogAPI.class).getAllBacklogItems())
+                .withSelfRel()
+                .andAffordance(afford(methodOn(BacklogAPI.class).createBacklogItem(null)))
+                .withRel("create-backlog-item")
+                .withTitle("Create backlog item")
+                .withName("default"));
   }
 
   @GetMapping("{backlog-item-id}")
@@ -97,9 +110,11 @@ public class BacklogAPI {
     @ApiResponse(responseCode = "200", description = "Backlog item returned"),
     @ApiResponse(responseCode = "404", description = "Backlog item not found", content = @Content)
   })
-  public ReadBacklogItemResponse getBacklogItem(
+  public ResponseEntity<EntityModel<ReadBacklogItemResponse>> getBacklogItem(
       @PathVariable(name = "backlog-item-id") UUID backlogItemId) {
-    return backlogApplication.getBacklogItem(backlogItemId);
+    ReadBacklogItemResponse readBacklogItemResponse =
+        backlogApplication.getBacklogItem(backlogItemId);
+    return ResponseEntity.ok(EntityModel.of(readBacklogItemResponse));
   }
 
   @DeleteMapping("{backlog-item-id}")
@@ -137,10 +152,12 @@ public class BacklogAPI {
         content = @Content),
     @ApiResponse(responseCode = "404", description = "Backlog item not found", content = @Content)
   })
-  public ReadBacklogItemResponse commitToSprint(
+  public EntityModel<ReadBacklogItemResponse> commitToSprint(
       @PathVariable(name = "backlog-item-id") UUID backlogItemId,
       @RequestBody @Valid CommitSprintRequest commitSprintRequest) {
-    return backlogApplication.commitToSprint(backlogItemId, commitSprintRequest);
+    ReadBacklogItemResponse readBacklogItemResponse =
+        backlogApplication.commitToSprint(backlogItemId, commitSprintRequest);
+    return EntityModel.of(readBacklogItemResponse);
   }
 
   @PutMapping("{backlog-item-id}/progress")
@@ -160,10 +177,12 @@ public class BacklogAPI {
         content = @Content),
     @ApiResponse(responseCode = "404", description = "Backlog item not found", content = @Content)
   })
-  public ReadBacklogItemResponse changeProgressStatus(
+  public EntityModel<ReadBacklogItemResponse> changeProgressStatus(
       @PathVariable(name = "backlog-item-id") UUID backlogItemId,
       @RequestBody @Valid ProgressStatusChangeRequest progressStatusChangeRequest) {
-    return backlogApplication.changeProgressStatus(backlogItemId, progressStatusChangeRequest);
+    ReadBacklogItemResponse readBacklogItemResponse =
+        backlogApplication.changeProgressStatus(backlogItemId, progressStatusChangeRequest);
+    return EntityModel.of(readBacklogItemResponse);
   }
 
   @PutMapping("{backlog-item-id}/comments")
@@ -183,9 +202,11 @@ public class BacklogAPI {
         content = @Content),
     @ApiResponse(responseCode = "404", description = "Backlog item not found", content = @Content)
   })
-  public ReadBacklogItemResponse addComment(
+  public EntityModel<ReadBacklogItemResponse> addComment(
       @PathVariable(name = "backlog-item-id") UUID backlogItemId,
       @RequestBody @Valid AddCommentRequest addCommentRequest) {
-    return backlogApplication.addComment(backlogItemId, addCommentRequest);
+    ReadBacklogItemResponse readBacklogItemResponse =
+        backlogApplication.addComment(backlogItemId, addCommentRequest);
+    return EntityModel.of(readBacklogItemResponse);
   }
 }

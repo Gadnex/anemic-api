@@ -1,16 +1,18 @@
 package net.binarypaper.anemic_api.backlog.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.UUID;
 
 public record ReadBacklogItemResponse(
-    UUID backlogItemId,
-    UUID productId,
-    UUID sprintId,
+    @JsonIgnore UUID backlogItemId,
+    @JsonIgnore UUID productId,
+    @JsonIgnore UUID sprintId,
     String name,
     String summary,
     String story,
-    Short storyPoints,
+    @JsonProperty("story-points") Short storyPoints,
     BacklogItemType type,
     BacklogItemStatus status,
     List<String> comment) {}

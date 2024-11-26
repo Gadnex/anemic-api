@@ -14,8 +14,6 @@ spring:
             enabled: true
             settings:
                 web-allow-others: true
-    jackson:
-        property-naming-strategy: KEBAB_CASE
 
 server:
     port: 8080

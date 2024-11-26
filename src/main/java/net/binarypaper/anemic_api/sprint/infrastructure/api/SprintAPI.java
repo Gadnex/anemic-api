@@ -26,7 +26,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequestMapping(
     path = "sprint",
     produces = {MediaType.APPLICATION_JSON_VALUE})
-@CrossOrigin(origins = {"${application.cors.origins}"})
+@CrossOrigin(
+    origins = {"${application.cors.origins}"},
+    exposedHeaders = HttpHeaders.LOCATION)
 @Tag(name = "Sprint API", description = "Manage sprints")
 @AllArgsConstructor
 public class SprintAPI {

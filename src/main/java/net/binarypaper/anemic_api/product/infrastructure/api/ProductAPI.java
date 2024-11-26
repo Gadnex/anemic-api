@@ -27,7 +27,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequestMapping(
     path = "products",
     produces = {MediaType.APPLICATION_JSON_VALUE})
-@CrossOrigin(origins = {"${application.cors.origins}"})
+@CrossOrigin(
+    origins = {"${application.cors.origins}"},
+    exposedHeaders = HttpHeaders.LOCATION)
 @Tag(name = "Product API", description = "Manage products")
 public class ProductAPI {
 
@@ -56,7 +58,7 @@ public class ProductAPI {
         }),
     @ApiResponse(responseCode = "400", description = "Invalid product details", content = @Content)
   })
-  ResponseEntity<ReadProductResponse> createProduct(
+  public ResponseEntity<ReadProductResponse> createProduct(
       @RequestBody @Valid CreateProductRequest createProductRequest) {
     ReadProductResponse productResponse = productApplication.createProduct(createProductRequest);
     return ResponseEntity.created(
@@ -77,7 +79,7 @@ public class ProductAPI {
             <b>so that</b> I can select the product I am working on.
             """)
   @ApiResponses({@ApiResponse(responseCode = "200", description = "List of products returned")})
-  List<ListProductResponse> getAllProducts() {
+  public List<ListProductResponse> getAllProducts() {
     return productApplication.getAllProducts();
   }
 
@@ -94,7 +96,7 @@ public class ProductAPI {
     @ApiResponse(responseCode = "200", description = "Product returned"),
     @ApiResponse(responseCode = "404", description = "Product not found", content = @Content)
   })
-  ReadProductResponse getProduct(@PathVariable(name = "product-id") UUID productId) {
+  public ReadProductResponse getProduct(@PathVariable(name = "product-id") UUID productId) {
     return productApplication.getProduct(productId);
   }
 
@@ -112,7 +114,7 @@ public class ProductAPI {
     @ApiResponse(responseCode = "400", description = "Invalid product details", content = @Content),
     @ApiResponse(responseCode = "404", description = "Product not found", content = @Content)
   })
-  ReadProductResponse updateProduct(
+  public ReadProductResponse updateProduct(
       @PathVariable(name = "product-id") UUID productId,
       @RequestBody @Valid UpdateProductRequest updateProductRequest) {
     return productApplication.updateProduct(productId, updateProductRequest);
@@ -132,7 +134,7 @@ public class ProductAPI {
     @ApiResponse(responseCode = "204", description = "Product deleted"),
     @ApiResponse(responseCode = "404", description = "Product not found", content = @Content)
   })
-  void deleteProduct(@PathVariable(name = "product-id") UUID productId) {
+  public void deleteProduct(@PathVariable(name = "product-id") UUID productId) {
     productApplication.deleteProduct(productId);
   }
 }

@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'net.binarypaper'
-version = 'non-anemic'
+version = 'hateoas'
 
 java {
 	toolchain {
