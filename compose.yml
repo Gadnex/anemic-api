@@ -8,5 +8,16 @@ services:
   non-anemic:
     image: anemic-api:non-anemic
     ports:
-      - 8080:8080
-      - 9080:9080
+      - 8081:8080
+      - 9081:9080
+    environment:
+      APPLICATION_API_ENDPOINT: http://localhost:8081
+      APPLICATION_CORS_ORIGINS: http://localhost:9081
+  hateoas:
+    image: anemic-api:hateoas
+    ports:
+      - 8082:8080
+      - 9082:9080
+    environment:
+      APPLICATION_API_ENDPOINT: http://localhost:8082
+      APPLICATION_CORS_ORIGINS: http://localhost:9082
