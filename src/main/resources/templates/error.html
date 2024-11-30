@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{index :: head}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scrum Management</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="stylesheet" href="../static/site.css">
+</head>
+<body>
+<header th:replace="~{index :: header}"></header>
+<main class="container-fluid"
+      th:fragment="main">
+  <h1 th:text="${message}">Error</h1>
+</main>
+<footer th:replace="~{index :: footer}"></footer>
+</body>
+</html>

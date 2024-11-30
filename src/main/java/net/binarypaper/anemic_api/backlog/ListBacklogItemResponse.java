@@ -1,4 +1,4 @@
-package net.binarypaper.anemic_api.backlog.domain;
+package net.binarypaper.anemic_api.backlog;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.UUID;

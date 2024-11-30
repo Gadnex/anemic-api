@@ -25,7 +25,7 @@ public class SprintApplication {
   }
 
   public List<ListSprintResponse> getAllSprints() {
-    return sprintRepository.findBy(ListSprintResponse.class);
+    return sprintRepository.findByOrderByName();
   }
 
   public ReadSprintResponse getSprint(UUID sprintId) {

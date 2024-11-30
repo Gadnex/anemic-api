@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{index :: head}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Scrum Management</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <link rel="stylesheet" href="../../static/site.css">
+</head>
+<body>
+<header th:replace="~{index :: header}"></header>
+<main class="container-fluid"
+      th:fragment="main">
+    <h1>Backlog Item</h1>
+    <label>
+        Product
+        <input th:value="${product.name()}"
+               disabled/>
+    </label>
+    <label>
+        Name
+        <input th:value="${backlogItem.name()}"
+               disabled/>
+    </label>
+    <label>
+        Summary
+        <input th:value="${backlogItem.summary()}"
+               disabled/>
+    </label>
+    <label>
+        User Story
+        <textarea th:text="${backlogItem.story()}"
+                  disabled></textarea>
+    </label>
+    <div class="grid">
+        <label>
+            Story Points
+            <input th:value="${backlogItem.storyPoints()}"
+                   disabled/>
+        </label>
+        <label>
+            Type
+            <input th:value="#{${'backlog.BacklogItemType.' + backlogItem.type()}}"
+                   disabled/>
+        </label>
+        <label>
+            Status
+            <input th:value="#{${'backlog.BacklogItemStatus.' + backlogItem.status()}}"
+                   disabled/>
+        </label>
+    </div>
+    <form id="sprint"
+          th:if="${sprints}"
+          th:fragment="sprint"
+          th:object="${commitSprintRequest}">
+        <label>
+            Sprint
+            <select name="sprintId"
+                    aria-label="Commit the story to a sprint"
+
+                    th:hx-put="@{|/backlog-items/${backlogItem.backlogItemId()}/sprint|}"
+                    hx-target="main"
+                    hx-swap="outerHTML">
+                <option selected disabled value="">Not committed</option>
+                <option th:each="sp : ${sprints}"
+                        th:value="${sp.sprintId()}"
+                        th:text="${sp.name()}">
+                    Sprint 1
+                </option>
+            </select>
+        </label>
+    </form>
+    <label th:if="!${sprints}">
+        Sprint
+        <input th:value="${sprint.name()}"
+               disabled/>
+    </label>
+</main>
+<footer th:replace="~{index :: footer}"></footer>
+</body>
+</html>

@@ -1,4 +1,4 @@
-package net.binarypaper.anemic_api.backlog.domain;
+package net.binarypaper.anemic_api.backlog;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;

@@ -25,7 +25,7 @@ public class ProductApplication {
   }
 
   public List<ListProductResponse> getAllProducts() {
-    return productRepository.findBy(ListProductResponse.class);
+    return productRepository.findByOrderByName();
   }
 
   public ReadProductResponse getProduct(@Valid UUID productId) {

@@ -10,22 +10,19 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import net.binarypaper.anemic_api.sprint.CreateSprintRequest;
+import net.binarypaper.anemic_api.sprint.ListSprintResponse;
+import net.binarypaper.anemic_api.sprint.PlanSprintRequest;
+import net.binarypaper.anemic_api.sprint.ReadSprintResponse;
 import net.binarypaper.anemic_api.sprint.SprintApplication;
-import net.binarypaper.anemic_api.sprint.domain.CreateSprintRequest;
-import net.binarypaper.anemic_api.sprint.domain.ListSprintResponse;
-import net.binarypaper.anemic_api.sprint.domain.PlanSprintRequest;
-import net.binarypaper.anemic_api.sprint.domain.ReadSprintResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
-@RequestMapping(
-    path = "sprint",
-    produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(path = "api/sprints")
 @CrossOrigin(
     origins = {"${application.cors.origins}"},
     exposedHeaders = HttpHeaders.LOCATION)

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{index :: head}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Scrum Management</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <link rel="stylesheet" href="../../static/site.css">
+</head>
+<body>
+<header th:replace="~{index :: header}"></header>
+<main class="container-fluid"
+      th:fragment="main">
+    <h1>Backlog Items</h1>
+    <article th:each="bi : ${backlogItems}"
+             th:text="${bi.name}"
+             th:hx-get="@{|/backlog-items/${bi.backlogItemId}|}"
+             th:hx-push-url="@{|/backlog-items/${bi.backlogItemId}|}"
+             hx-target="main"
+             hx-swap="outerHTML transition:true">
+        Backlog Item 1
+    </article>
+</main>
+<footer th:replace="~{index :: footer}"></footer>
+</body>
+</html>

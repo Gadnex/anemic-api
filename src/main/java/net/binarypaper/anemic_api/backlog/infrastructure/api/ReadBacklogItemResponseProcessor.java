@@ -3,7 +3,7 @@ package net.binarypaper.anemic_api.backlog.infrastructure.api;
 import static org.springframework.hateoas.server.mvc.BasicLinkBuilder.linkToCurrentMapping;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
-import net.binarypaper.anemic_api.backlog.domain.ReadBacklogItemResponse;
+import net.binarypaper.anemic_api.backlog.ReadBacklogItemResponse;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
 import org.springframework.stereotype.Component;

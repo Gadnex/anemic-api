@@ -11,6 +11,9 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import net.binarypaper.anemic_api.sprint.CreateSprintRequest;
+import net.binarypaper.anemic_api.sprint.PlanSprintRequest;
+import net.binarypaper.anemic_api.sprint.ReadSprintResponse;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

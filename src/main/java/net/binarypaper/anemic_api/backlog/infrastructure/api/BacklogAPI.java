@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import net.binarypaper.anemic_api.backlog.BacklogApplication;
-import net.binarypaper.anemic_api.backlog.domain.*;
+import net.binarypaper.anemic_api.backlog.*;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpHeaders;
@@ -25,7 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(path = "backlog-items")
+@RequestMapping(path = "api/backlog-items")
 @CrossOrigin(
     origins = {"${application.cors.origins}"},
     exposedHeaders = HttpHeaders.LOCATION)

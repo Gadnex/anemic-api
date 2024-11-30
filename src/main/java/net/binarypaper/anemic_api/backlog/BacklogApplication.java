@@ -26,7 +26,7 @@ public class BacklogApplication {
   }
 
   public List<ListBacklogItemResponse> getAllBacklogItems() {
-    return backlogItemRepository.findBy(ListBacklogItemResponse.class);
+    return backlogItemRepository.findByOrderByName();
   }
 
   public ReadBacklogItemResponse getBacklogItem(UUID backlogItemId) {

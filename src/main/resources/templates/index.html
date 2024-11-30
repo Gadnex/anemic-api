@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Scrum Management</title>
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+            th:href="@{/webjars/picocss__pico/css/pico.min.css}"
+    >
+    <link rel="stylesheet" href="../static/site.css" th:href="@{/site.css}">
+</head>
+<body>
+<header class="container-fluid" data-theme="dark" th:fragment="header">
+    <nav>
+        <ul>
+            <li>
+                <strong>
+                    <a href="/"
+                       hx-get="/"
+                       hx-push-url="/"
+                       hx-target="main"
+                       hx-swap="outerHTML transition:true">
+                        Scrum Management
+                    </a>
+                </strong>
+            </li>
+        </ul>
+        <ul>
+            <li>
+                <a href="./product/products.html"
+                   th:href="@{/products}"
+                   th:hx-get="@{/products}"
+                   hx-push-url="/products"
+                   hx-target="main"
+                   hx-swap="outerHTML transition:true">
+                    Product
+                </a>
+            </li>
+            <li>
+                <a href="./backlog/backlog-items.html"
+                   th:href="@{/backlog-items}"
+                   th:hx-get="@{/backlog-items}"
+                   hx-push-url="/backlog-items"
+                   hx-target="main"
+                   hx-swap="outerHTML transition:true">
+                    Backlog
+                </a>
+            </li>
+            <li>
+                <a href="./sprint/sprints.html"
+                   th:href="@{/sprints}"
+                   th:hx-get="@{/sprints}"
+                   hx-push-url="/sprints"
+                   hx-target="main"
+                   hx-swap="outerHTML transition:true">
+                    Sprint
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="container-fluid"
+      th:fragment="main">
+    <h1>Welcome to Scrum Management</h1>
+</main>
+<footer th:fragment="footer">
+    <script src="https://unpkg.com/htmx.org@2.0.3" th:src="@{/webjars/htmx.org/dist/htmx.min.js}"></script>
+</footer>
+</body>
+</html>

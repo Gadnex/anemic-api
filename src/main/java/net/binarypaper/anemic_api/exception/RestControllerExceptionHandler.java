@@ -3,11 +3,11 @@ package net.binarypaper.anemic_api.exception;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class RestControllerExceptionHandler {
 
   @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})

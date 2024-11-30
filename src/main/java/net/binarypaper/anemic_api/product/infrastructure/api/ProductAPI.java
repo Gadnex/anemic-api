@@ -11,22 +11,19 @@ import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import net.binarypaper.anemic_api.product.*;
-import net.binarypaper.anemic_api.product.domain.CreateProductRequest;
-import net.binarypaper.anemic_api.product.domain.ListProductResponse;
-import net.binarypaper.anemic_api.product.domain.ReadProductResponse;
-import net.binarypaper.anemic_api.product.domain.UpdateProductRequest;
+import net.binarypaper.anemic_api.product.CreateProductRequest;
+import net.binarypaper.anemic_api.product.ListProductResponse;
+import net.binarypaper.anemic_api.product.ReadProductResponse;
+import net.binarypaper.anemic_api.product.UpdateProductRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(
-    path = "products",
-    produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(path = "api/products")
 @CrossOrigin(
     origins = {"${application.cors.origins}"},
     exposedHeaders = HttpHeaders.LOCATION)
