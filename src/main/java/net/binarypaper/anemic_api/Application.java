@@ -24,7 +24,7 @@ import org.springframework.retry.annotation.EnableRetry;
             contact =
                 @Contact(name = "${build.developer.name}", email = "${build.developer.email}"),
             license = @License(name = "${build.license.name}", url = "${build.license.url}")),
-servers = @Server(url = "${application.api.endpoint}"))
+    servers = @Server(url = "${application.api.endpoint}"))
 @EnableRetry
 public class Application {
 
