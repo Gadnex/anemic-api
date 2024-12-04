@@ -1,13 +1,15 @@
-body>header {
-    background-color: var(--pico-background-color);
+main>header {
+    display: flex;
+    justify-content: space-between;
 }
 
-article {
-    background-color: var(--pico-primary-background);
-}
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
 
-article:hover {
-    background-color: var(--pico-primary-hover-background);
+.actions>button {
+    padding: 0;
 }
 
 @keyframes fade-in {
@@ -37,4 +39,13 @@ main {
 ::view-transition-new(slide-it) {
     animation: 420ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
     600ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+}
+
+dialog {
+    opacity: 1;
+    transition: opacity 1s ease-out;
+}
+
+dialog.htmx-added {
+    opacity: 0;
 }

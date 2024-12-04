@@ -36,6 +36,16 @@ public class BacklogController {
     return "backlog/backlog-items";
   }
 
+  @GetMapping("create")
+  public String viewCreateBacklogItem(
+      @RequestHeader(name = "Hx-Request", required = false) String hxRequest, Model model) {
+    if (hxRequest != null) {
+      return "backlog/create-backlog-item :: create-backlog-item";
+    }
+    model.addAttribute("create", true);
+    return viewBacklogItems(hxRequest, model);
+  }
+
   @GetMapping("{id}")
   public String viewBacklogItem(
       @PathVariable UUID id,

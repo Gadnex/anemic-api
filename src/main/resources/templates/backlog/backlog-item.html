@@ -57,7 +57,6 @@
             Sprint
             <select name="sprintId"
                     aria-label="Commit the story to a sprint"
-
                     th:hx-put="@{|/backlog-items/${backlogItem.backlogItemId()}/sprint|}"
                     hx-target="main"
                     hx-swap="outerHTML">

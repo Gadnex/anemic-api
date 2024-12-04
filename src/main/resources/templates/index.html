@@ -4,18 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Scrum Management</title>
-    <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
-            th:href="@{/webjars/picocss__pico/css/pico.min.css}"
-    >
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+          th:href="@{/webjars/picocss__pico/css/pico.min.css}">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css"
+          th:href="@{/webjars/picocss__pico/css/pico.colors.min.css}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
     <link rel="stylesheet" href="../static/site.css" th:href="@{/site.css}">
 </head>
 <body>
-<header class="container-fluid" data-theme="dark" th:fragment="header">
+<header class="container-fluid pico-background-blue-750" data-theme="dark" th:fragment="header">
     <nav>
         <ul>
-            <li>
+            <li class="pico-color-blue-750">
                 <strong>
                     <a href="/"
                        hx-get="/"

@@ -16,7 +16,7 @@ spring:
                 web-allow-others: true
 
 server:
-    port: 8080
+    port: 8580
 
 management:
     server:

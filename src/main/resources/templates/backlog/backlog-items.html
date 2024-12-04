@@ -5,14 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Scrum Management</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
     <link rel="stylesheet" href="../../static/site.css">
 </head>
 <body>
 <header th:replace="~{index :: header}"></header>
 <main class="container-fluid"
       th:fragment="main">
-    <h1>Backlog Items</h1>
-    <article th:each="bi : ${backlogItems}"
+    <header>
+        <h1>Backlog Items</h1>
+        <div class="actions">
+            <button class="material-icons md-36"
+                    th:hx-get="@{/backlog-items/create}"
+                    th:hx-push-url="@{/backlog-items/create}"
+                    hx-target="main"
+                    hx-swap="beforeend">
+                add
+            </button>
+        </div>
+    </header>
+    <article class="pico-background-grey-100"
+             th:each="bi : ${backlogItems}"
              th:text="${bi.name}"
              th:hx-get="@{|/backlog-items/${bi.backlogItemId}|}"
              th:hx-push-url="@{|/backlog-items/${bi.backlogItemId}|}"
@@ -20,6 +36,7 @@
              hx-swap="outerHTML transition:true">
         Backlog Item 1
     </article>
+    <div th:replace="${create} != null ? ~{backlog/create-backlog-item :: create-backlog-item} : ~{}"></div>
 </main>
 <footer th:replace="~{index :: footer}"></footer>
 </body>

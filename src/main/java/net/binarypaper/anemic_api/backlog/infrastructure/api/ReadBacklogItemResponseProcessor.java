@@ -20,6 +20,7 @@ public class ReadBacklogItemResponseProcessor
     model.add(linkTo(methodOn(BacklogAPI.class).getAllBacklogItems()).withRel("all-backlog-items"));
     model.add(
         linkToCurrentMapping()
+            .slash("api")
             .slash("products")
             .slash(model.getContent().productId())
             .withRel("product"));
@@ -41,6 +42,7 @@ public class ReadBacklogItemResponseProcessor
     } else {
       model.add(
           linkToCurrentMapping()
+              .slash("api")
               .slash("sprints")
               .slash(model.getContent().sprintId())
               .withRel("sprint"));

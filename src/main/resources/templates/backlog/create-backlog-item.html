@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Scrum Management</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <link rel="stylesheet" href="../../static/site.css">
+</head>
+<body>
+<dialog th:fragment="create-backlog-item"
+        open>
+    <form>
+        <article>
+            <header>
+                <button aria-label="Close" rel="prev"></button>
+                <h2>Create Backlog Item</h2>
+            </header>
+            <fieldset>
+                <label>
+                    Product
+                    <select name="productId"
+                            aria-label="Product for new backlog item"
+<!--/*
+                            th:hx-put="@{|/backlog-items/${backlogItem.backlogItemId()}/sprint|}"
+*/-->
+                            hx-target="main"
+                            hx-swap="outerHTML">
+                        <option selected disabled value="">Select a product</option>
+                        <option
+<!--/*
+                                th:each="pr : ${products}"
+                                th:value="${pr.productId()}"
+                                th:text="${pr.name()}">
+*/-->
+                            Product 1
+                        </option>
+                    </select>
+                </label>
+                <label>
+                    Name
+                    <input/>
+<!--/*
+                            th:value="${backlogItem.name()}"/>
+*/-->
+                </label>
+                <label>
+                    Summary
+                    <input/>
+<!--/*
+                            th:value="${backlogItem.summary()}"/>
+*/-->
+                </label>
+            </fieldset>
+            <footer>
+                <button class="secondary"
+                        hx-get="/"
+                        hx-push-url="/backlog-items"
+                        hx-trigger="click"
+                        hx-target="dialog"
+                        hx-swap="delete">
+                    Cancel
+                </button>
+                <button>Confirm</button>
+            </footer>
+        </article>
+    </form>
+</dialog>
+</body>
+</html>
