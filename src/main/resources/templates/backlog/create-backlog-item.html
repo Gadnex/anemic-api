@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="../../static/site.css">
 </head>
 <body>
-<dialog th:fragment="create-backlog-item"
+<dialog class="fade-me-out"
+        th:fragment="create-backlog-item"
         open>
     <form>
         <article>
@@ -58,7 +59,7 @@
                         hx-push-url="/backlog-items"
                         hx-trigger="click"
                         hx-target="dialog"
-                        hx-swap="delete">
+                        hx-swap="delete swap:1s">
                     Cancel
                 </button>
                 <button>Confirm</button>

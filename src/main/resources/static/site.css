@@ -8,7 +8,7 @@ main>header {
 .material-icons.md-36 { font-size: 36px; }
 .material-icons.md-48 { font-size: 48px; }
 
-.actions>button {
+button.material-icons {
     padding: 0;
 }
 
@@ -48,4 +48,9 @@ dialog {
 
 dialog.htmx-added {
     opacity: 0;
+}
+
+.fade-me-out.htmx-swapping {
+    opacity: 0;
+    transition: opacity 1s ease-out;
 }
