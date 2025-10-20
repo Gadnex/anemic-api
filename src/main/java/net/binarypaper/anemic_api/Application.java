@@ -23,7 +23,7 @@ import org.springframework.context.annotation.PropertySource;
             contact =
                 @Contact(name = "${build.developer.name}", email = "${build.developer.email}"),
             license = @License(name = "${build.license.name}", url = "${build.license.url}")),
-servers = @Server(url = "${application.api.endpoint}"))
+    servers = @Server(url = "${application.api.endpoint}"))
 public class Application {
 
   public static void main(String[] args) {
